@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VIKAS-DRISHTI | AI-Powered MPLADS Risk Intelligence & Monitoring System</title>
+  <meta name="description" content="AI-Powered MPLADS Risk Intelligence & Monitoring System for MoSPI SIH 2026 Problem Statement SIH26102">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Leaflet CSS for Map -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Application CSS -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans antialiased">
+
+  <!-- Top Disclaimer Ribbon -->
+  <div class="prototype-banner">
+    <div class="banner-content">
+      <span class="badge-pill bg-amber-500 text-white font-bold text-xs px-2 py-0.5 rounded">SIH 2026 PROTOTYPE</span>
+      <span class="banner-text"><strong>Prototype Dashboard — Sample Data</strong> for MoSPI SIH26102. AI supports decision-making; final administrative decision remains with the authorized human officer.</span>
+    </div>
+    <div class="banner-sys-tag">eSAKSHI Analytical Intelligence Layer</div>
+  </div>
+
+  <!-- Government Header & Branding -->
+  <header class="gov-header">
+    <div class="gov-header-inner">
+      <div class="brand-group">
+        <div class="ashoka-emblem">
+          <i class="fa-solid fa-landmark text-amber-400 text-2xl"></i>
+        </div>
+        <div class="brand-titles">
+          <div class="gov-sub">सांख्यिकी और कार्यक्रम कार्यान्वयन मंत्रालय | Ministry of Statistics & Programme Implementation</div>
+          <div class="gov-title">
+            <span class="brand-name">VIKAS-DRISHTI</span>
+            <span class="brand-subname">विकास दृष्टि</span>
+            <span class="badge-ai"><i class="fa-solid fa-microchip"></i> AI-Powered MPLADS Risk Intelligence</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Header Utilities & RBAC Role Switcher -->
+      <div class="header-actions">
+        <!-- Role Switcher -->
+        <div class="role-selector-container">
+          <label for="roleSelector" class="text-xs text-slate-300 block mb-1">
+            <i class="fa-solid fa-user-shield text-indigo-400"></i> Active RBAC Role:
+          </label>
+          <div class="select-wrapper">
+            <select id="roleSelector" class="gov-select">
+              <option value="DISTRICT_OFFICER" selected>1. District Officer (Sehore Collectorate)</option>
+              <option value="STATE_NODAL">2. State Nodal Authority (MP Planning)</option>
+              <option value="MINISTRY_ADMIN">3. Ministry/Admin Officer (MoSPI National)</option>
+              <option value="MP_VIEWER">4. MP / Authorized Viewer (Vidisha PC)</option>
+              <option value="ADMIN">5. System Administrator (IT / Calibration)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="header-clock" id="headerClock">
+          <i class="fa-regular fa-clock"></i> <span id="liveTime">--:--:-- UTC</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Navigation Bar -->
+  <nav class="main-nav">
+    <div class="nav-inner">
+      <button class="nav-tab active" data-tab="dashboard">
+        <i class="fa-solid fa-chart-pie"></i> Executive Dashboard
+      </button>
+      <button class="nav-tab" data-tab="copilot">
+        <i class="fa-solid fa-wand-magic-sparkles text-indigo-400"></i> AI Investigation Copilot
+        <span class="nav-badge-alert">Flagship</span>
+      </button>
+      <button class="nav-tab" data-tab="duplicates">
+        <i class="fa-solid fa-clone text-amber-400"></i> Multilingual Duplicate Matrix
+      </button>
+      <button class="nav-tab" data-tab="cost-payment">
+        <i class="fa-solid fa-indian-rupee-sign text-emerald-400"></i> Cost & Payment Intelligence
+      </button>
+      <button class="nav-tab" data-tab="compliance">
+        <i class="fa-solid fa-clipboard-check text-blue-400"></i> Compliance & Early Warning
+      </button>
+      <button class="nav-tab" data-tab="simulator">
+        <i class="fa-solid fa-flask-vial text-purple-400"></i> AI Ingestion Sandbox
+      </button>
+      <button class="nav-tab" data-tab="audit">
+        <i class="fa-solid fa-fingerprint text-slate-400"></i> Immutable Audit Trail
+      </button>
+    </div>
+  </nav>
+
+  <!-- System Conceptual Architecture Ticker -->
+  <div class="pipeline-ticker">
+    <span class="ticker-label"><i class="fa-solid fa-arrow-progress"></i> SYSTEM PIPELINE:</span>
+    <div class="pipeline-steps">
+      <span class="p-step">MPLADS DATA</span>
+      <i class="fa-solid fa-chevron-right text-xs"></i>
+      <span class="p-step">DATA INGESTION</span>
+      <i class="fa-solid fa-chevron-right text-xs"></i>
+      <span class="p-step">CLEANING & VALIDATION</span>
+      <i class="fa-solid fa-chevron-right text-xs"></i>
+      <span class="p-step highlight">AI/ML + RULE ENGINE</span>
+      <i class="fa-solid fa-chevron-right text-xs"></i>
+      <span class="p-step highlight">MULTI-SIGNAL SCORING</span>
+      <i class="fa-solid fa-chevron-right text-xs"></i>
+      <span class="p-step highlight-ai">EXPLAINABLE AI</span>
+      <i class="fa-solid fa-chevron-right text-xs"></i>
+      <span class="p-step highlight-ai">INVESTIGATION COPILOT</span>
+      <i class="fa-solid fa-chevron-right text-xs"></i>
+      <span class="p-step highlight-human">HUMAN VERIFICATION</span>
+      <i class="fa-solid fa-chevron-right text-xs"></i>
+      <span class="p-step">AUDIT TRAIL</span>
+    </div>
+    <div class="memory-anchor">
+      <code>DATA → CLEAN → AI → RISK → EXPLAIN → HUMAN → AUDIT</code>
+    </div>
+  </div>
+
+  <!-- Role Notification Alert Bar -->
+  <div class="role-banner" id="roleBanner">
+    <div class="role-badge" id="roleBadge">DISTRICT OFFICER</div>
+    <div class="role-info" id="roleInfo">
+      Viewing District: <strong>Sehore (Madhya Pradesh)</strong>. Authorized to review risk alerts, initiate ground investigations, update field verification status, and generate dossiers.
+    </div>
+  </div>
+
+  <!-- Main Application Body Container -->
+  <main class="main-container">
+
+    <!-- ============================================================== -->
+    <!-- TAB 1: EXECUTIVE DASHBOARD                                     -->
+    <!-- ============================================================== -->
+    <section id="tab-dashboard" class="tab-content active">
+      
+      <!-- Top Stat Cards -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-title">TOTAL MONITORED PROJECTS</div>
+          <div class="kpi-value" id="kpiTotal">12,458</div>
+          <div class="kpi-sub"><i class="fa-solid fa-database text-slate-400"></i> Sample Portfolio Pool</div>
+        </div>
+        <div class="kpi-card border-critical">
+          <div class="kpi-title text-red-600">CRITICAL RISK (81–100)</div>
+          <div class="kpi-value text-red-600" id="kpiCritical">64</div>
+          <div class="kpi-sub text-red-500 font-semibold"><i class="fa-solid fa-circle-exclamation"></i> Immediate Verification Required</div>
+        </div>
+        <div class="kpi-card border-high">
+          <div class="kpi-title text-orange-600">HIGH RISK (61–80)</div>
+          <div class="kpi-value text-orange-600" id="kpiHigh">98</div>
+          <div class="kpi-sub text-orange-500"><i class="fa-solid fa-triangle-exclamation"></i> Priority Inspection List</div>
+        </div>
+        <div class="kpi-card border-medium">
+          <div class="kpi-title text-amber-600">MEDIUM RISK (31–60)</div>
+          <div class="kpi-value text-amber-600" id="kpiMedium">62</div>
+          <div class="kpi-sub text-amber-500"><i class="fa-solid fa-clock-rotate-left"></i> Routine Officer Review</div>
+        </div>
+        <div class="kpi-card border-low">
+          <div class="kpi-title text-emerald-600">LOW / NORMAL (0–30)</div>
+          <div class="kpi-value text-emerald-600" id="kpiLow">24</div>
+          <div class="kpi-sub text-emerald-600"><i class="fa-solid fa-circle-check"></i> Standard Implementation</div>
+        </div>
+      </div>
+
+      <!-- Clarification Note on Risk Score -->
+      <div class="info-callout">
+        <i class="fa-solid fa-circle-info text-indigo-500 text-lg"></i>
+        <div class="callout-text">
+          <strong>Institutional Governance Rule:</strong> Risk Score indicates <em>"Priority for administrative verification"</em> — NOT <em>"Probability of fraud"</em>. Thresholds (0-30 Low, 31-60 Medium, 61-80 High, 81-100 Critical) are prototype configuration values to prioritize officer time efficiently.
+        </div>
+      </div>
+
+      <!-- Live Signals & 6-Month Trend Grid -->
+      <div class="grid-2col mb-6">
+        <!-- Live Risk Signals Ticker -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <div class="panel-title">
+              <i class="fa-solid fa-bolt text-amber-400"></i> Live Anomaly Signals Feed
+            </div>
+            <span class="pulse-indicator"><span class="pulse-dot"></span> Real-time Ingestion</span>
+          </div>
+          <div class="panel-body p-0">
+            <div class="signals-list" id="signalsTicker">
+              <div class="signal-item border-l-red">
+                <div class="signal-time">Just now</div>
+                <div class="signal-content">
+                  <span class="signal-tag bg-red-100 text-red-700">Cost Anomaly (+120%)</span>
+                  <div class="signal-proj"><strong>MP/SEH/CH/2024/10234</strong> — Community Hall, Pipaliya</div>
+                  <div class="signal-desc">Actual ₹48.45L vs Sanction ₹22.00L; expenditure velocity ahead of ground progress.</div>
+                </div>
+                <button class="btn-sm btn-outline" onclick="openProjectCopilot('MP_SEH_CH_2024_10234')">Investigate</button>
+              </div>
+              <div class="signal-item border-l-orange">
+                <div class="signal-time">12 mins ago</div>
+                <div class="signal-content">
+                  <span class="signal-tag bg-orange-100 text-orange-700">Spend-Progress Mismatch</span>
+                  <div class="signal-proj"><strong>MH/PUN/DW/2024/03419</strong> — Solar RO Plant, Uruli Kanchan</div>
+                  <div class="signal-desc">82% funds drawn; physical progress stagnant at 45%. Proximity to JJM asset.</div>
+                </div>
+                <button class="btn-sm btn-outline" onclick="openProjectCopilot('MH_PUN_DW_2024_03419')">Investigate</button>
+              </div>
+              <div class="signal-item border-l-red">
+                <div class="signal-time">45 mins ago</div>
+                <div class="signal-content">
+                  <span class="signal-tag bg-red-100 text-red-700">Payment Rush Spike</span>
+                  <div class="signal-proj"><strong>WB/HOW/HL/2024/09115</strong> — Health Sub-Centre, Baniban</div>
+                  <div class="signal-desc">₹36.90L disbursed across 7 days in March closing without updated MB book entries.</div>
+                </div>
+                <button class="btn-sm btn-outline" onclick="openProjectCopilot('WB_HOW_HL_2024_09115')">Investigate</button>
+              </div>
+              <div class="signal-item border-l-yellow">
+                <div class="signal-time">2 hours ago</div>
+                <div class="signal-content">
+                  <span class="signal-tag bg-amber-100 text-amber-700">Timeline Lag (2 Mos)</span>
+                  <div class="signal-proj"><strong>RJ/JAI/ED/2024/05921</strong> — School Classrooms & IT Lab</div>
+                  <div class="signal-desc">IT cabling procurement tender delayed; structural work 65% complete.</div>
+                </div>
+                <button class="btn-sm btn-outline" onclick="openProjectCopilot('RJ_JAI_ED_2024_05921')">Investigate</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6-Month Risk Trend Chart -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <div class="panel-title">
+              <i class="fa-solid fa-chart-line text-indigo-400"></i> Anomaly Trends (Last 6 Months)
+            </div>
+            <div class="early-warning-badge">
+              <i class="fa-solid fa-triangle-exclamation"></i> Early Warning Active
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="chart-container" style="height: 240px;">
+              <canvas id="trendChart"></canvas>
+            </div>
+            <div class="early-warning-callout">
+              <i class="fa-solid fa-bell text-amber-500"></i>
+              <span><strong>Early Warning:</strong> Cost anomaly signals increased by +42% over the last 3 months in Rural Infrastructure works. Preventive monitoring recommended.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- District Risk Map & GIS Explorer -->
+      <div class="panel-card mb-6">
+        <div class="panel-header">
+          <div class="panel-title">
+            <i class="fa-solid fa-map-location-dot text-indigo-400"></i> Interactive District / Location Risk Map
+            <span class="text-xs font-normal text-slate-400 ml-2">(Prototype Map — Sample Coordinates)</span>
+          </div>
+          <div class="map-legend">
+            <span class="legend-item"><span class="dot bg-red-500"></span> Critical (81–100)</span>
+            <span class="legend-item"><span class="dot bg-orange-500"></span> High (61–80)</span>
+            <span class="legend-item"><span class="dot bg-amber-500"></span> Medium (31–60)</span>
+            <span class="legend-item"><span class="dot bg-emerald-500"></span> Low (0–30)</span>
+          </div>
+        </div>
+        <div class="panel-body p-0">
+          <div id="riskMap" style="height: 380px; width: 100%;"></div>
+        </div>
+      </div>
+
+      <!-- High-Risk Projects Explorer Table -->
+      <div class="panel-card">
+        <div class="panel-header">
+          <div class="panel-title">
+            <i class="fa-solid fa-list-check text-indigo-400"></i> Prioritized Projects for Officer Verification
+          </div>
+          <div class="filter-controls">
+            <input type="text" id="projectSearch" placeholder="Search ID, title, MP, village..." class="filter-input" onkeyup="filterProjects()">
+            <select id="tierFilter" class="filter-select" onchange="filterProjects()">
+              <option value="ALL">All Risk Tiers</option>
+              <option value="CRITICAL">Critical (81-100)</option>
+              <option value="HIGH">High (61-80)</option>
+              <option value="MEDIUM">Medium (31-60)</option>
+              <option value="LOW">Low (0-30)</option>
+            </select>
+            <select id="districtFilter" class="filter-select" onchange="filterProjects()">
+              <option value="ALL">All Districts</option>
+              <option value="Sehore">Sehore (MP)</option>
+              <option value="Howrah">Howrah (WB)</option>
+              <option value="Pune">Pune (MH)</option>
+              <option value="Jaipur Rural">Jaipur Rural (RJ)</option>
+              <option value="Varanasi">Varanasi (UP)</option>
+              <option value="Bengaluru South">Bengaluru South (KA)</option>
+            </select>
+          </div>
+        </div>
+        <div class="panel-body p-0">
+          <div class="table-responsive">
+            <table class="gov-table" id="projectsTable">
+              <thead>
+                <tr>
+                  <th>Priority & ID</th>
+                  <th>Project Title & Constituency</th>
+                  <th>Location</th>
+                  <th>Sanctioned vs Actual</th>
+                  <th>Progress vs Spend</th>
+                  <th>Primary Risk Signal</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="projectsTableBody">
+                <!-- Dynamically populated via app.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- TAB 2: AI INVESTIGATION COPILOT (SIGNATURE FEATURE)            -->
+    <!-- ============================================================== -->
+    <section id="tab-copilot" class="tab-content">
+      
+      <!-- Flagship Dossier Banner -->
+      <div class="copilot-hero">
+        <div class="copilot-hero-content">
+          <div class="copilot-badge">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> AI INVESTIGATION COPILOT
+          </div>
+          <h1 class="copilot-title" id="copilotTitle">Construction of Community Hall</h1>
+          <div class="copilot-title-hi" id="copilotTitleHi">सामुदायिक भवन निर्माण</div>
+          
+          <div class="copilot-meta-grid">
+            <div class="meta-item">
+              <span class="meta-label">Project ID:</span>
+              <strong class="font-mono text-white" id="copilotDisplayId">MP/SEH/CH/2024/10234</strong>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Location:</span>
+              <span id="copilotLocation">Village Pipaliya, Block Ichhawar, Sehore, Madhya Pradesh</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Recommended By:</span>
+              <span id="copilotMp">Shri Ramakant Bhargava (Lok Sabha - Vidisha)</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Implementing Agency:</span>
+              <span id="copilotAgency">Rural Engineering Services (RES), Sehore</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Risk Score Gauge Box -->
+        <div class="copilot-score-card">
+          <div class="score-label">VERIFICATION PRIORITY SCORE</div>
+          <div class="score-number-box">
+            <span class="score-val text-red-500" id="copilotScoreVal">92</span>
+            <span class="score-max">/100</span>
+          </div>
+          <div class="score-tier-badge badge-critical" id="copilotTierBadge">CRITICAL — VERIFY</div>
+          <div class="score-caption">Priority for administrative verification.<br>Not proof of wrongdoing.</div>
+        </div>
+      </div>
+
+      <!-- Detailed Scoring Breakdown & XAI Explanation -->
+      <div class="grid-2col mb-6">
+        
+        <!-- Multi-Signal Breakdown (Max 100) -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <div class="panel-title">
+              <i class="fa-solid fa-chart-simple text-indigo-400"></i> WHY IS THIS PROJECT HIGH RISK?
+            </div>
+            <span class="text-xs text-slate-400 font-mono">Calibrated Multi-Signal Weights</span>
+          </div>
+          <div class="panel-body">
+            
+            <!-- Signal 1: Cost Anomaly -->
+            <div class="signal-row">
+              <div class="signal-row-header">
+                <span class="signal-name"><i class="fa-solid fa-indian-rupee-sign text-red-500"></i> Cost Anomaly Detection</span>
+                <span class="signal-points font-mono font-bold text-red-600" id="scoreCost">22 / 25</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill bg-red-500" style="width: 88%;"></div>
+              </div>
+              <div class="signal-detail" id="signalCostText">Cost overrun +120.2% vs sanctioned estimate (₹48.45L vs ₹22.00L). Isolation Forest anomaly severity high.</div>
+            </div>
+
+            <!-- Signal 2: Delay Risk -->
+            <div class="signal-row">
+              <div class="signal-row-header">
+                <span class="signal-name"><i class="fa-solid fa-hourglass-half text-orange-500"></i> Project Delay & Progress Velocity Lag</span>
+                <span class="signal-points font-mono font-bold text-orange-600" id="scoreDelay">18 / 20</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill bg-orange-500" style="width: 90%;"></div>
+              </div>
+              <div class="signal-detail" id="signalDelayText">Expected physical progress 85% vs Actual progress 30% (Lag: 55%). Overdue by 8 months.</div>
+            </div>
+
+            <!-- Signal 3: Spending vs Progress Mismatch -->
+            <div class="signal-row">
+              <div class="signal-row-header">
+                <span class="signal-name"><i class="fa-solid fa-scale-unbalanced text-amber-500"></i> Spending vs Physical Progress Mismatch</span>
+                <span class="signal-points font-mono font-bold text-amber-600" id="scoreMismatch">17 / 20</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill bg-amber-500" style="width: 85%;"></div>
+              </div>
+              <div class="signal-detail" id="signalMismatchText">Funds utilized 75% while physical ground progress is only 30%. High financial draw relative to physical output.</div>
+            </div>
+
+            <!-- Signal 4: Duplicate Possibility -->
+            <div class="signal-row">
+              <div class="signal-row-header">
+                <span class="signal-name"><i class="fa-solid fa-clone text-purple-500"></i> Multilingual Duplicate Possibility</span>
+                <span class="signal-points font-mono font-bold text-purple-600" id="scoreDuplicate">15 / 15</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill bg-purple-500" style="width: 100%;"></div>
+              </div>
+              <div class="signal-detail" id="signalDuplicateText">Semantic similarity 94% with nearby asset MP/SEH/RES/2023/8892 ("सामुदायिक भवन निर्माण - पिपलिया") at 1.4 km distance.</div>
+            </div>
+
+            <!-- Signal 5: Other Unusual Patterns -->
+            <div class="signal-row">
+              <div class="signal-row-header">
+                <span class="signal-name"><i class="fa-solid fa-triangle-exclamation text-rose-500"></i> Other Unusual Patterns & Compliance Gaps</span>
+                <span class="signal-points font-mono font-bold text-rose-600" id="scoreOther">20 / 20</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill bg-rose-500" style="width: 100%;"></div>
+              </div>
+              <div class="signal-detail" id="signalOtherText">Advance tranche concentration (68% released before plinth), missing geo-tagged completion photos.</div>
+            </div>
+
+            <!-- Total Score Summary Bar -->
+            <div class="score-total-bar">
+              <span>Total Composite Priority:</span>
+              <span class="font-mono text-xl font-extrabold text-red-600" id="scoreTotalSummary">92 / 100 (CRITICAL)</span>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- AI Natural Language Explanation & Institutional Context -->
+        <div class="space-y-6">
+          <div class="panel-card bg-indigo-50/50 border-indigo-200">
+            <div class="panel-header bg-indigo-100/50">
+              <div class="panel-title text-indigo-950">
+                <i class="fa-solid fa-brain text-indigo-600"></i> AI Natural Language Explanation
+              </div>
+              <span class="badge-pill bg-indigo-600 text-white text-xs">Explainable AI (XAI)</span>
+            </div>
+            <div class="panel-body">
+              <blockquote class="xai-quote" id="xaiExplanationText">
+                "Actual expenditure is significantly higher (+120%) than similar projects. Physical progress is below expectation (30% vs 85% expected), while a large portion of funds (75%) has already been utilized. A similar nearby work was also detected 1.4 km away with high multilingual semantic similarity."
+              </blockquote>
+              <div class="xai-meta-notes mt-4 text-xs text-slate-600">
+                <p><strong>Note for Administrative Officer:</strong> This AI explanation synthesizes signals from Isolation Forest cost models, cross-lingual NLP transformers, and PFMS financial records. The model provides priority guidance; ground verification by a designated Gazetted Officer or Technical Squad is mandatory before any administrative measure.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project Twin / Peer Cohort Comparison Box -->
+          <div class="panel-card">
+            <div class="panel-header">
+              <div class="panel-title">
+                <i class="fa-solid fa-arrows-split-up-and-left text-blue-500"></i> Project Twin / Peer Cohort Benchmark
+              </div>
+              <span class="badge-pill bg-slate-100 text-slate-700 text-xs">Cohort n=42 Central India</span>
+            </div>
+            <div class="panel-body">
+              <div class="peer-grid">
+                
+                <div class="peer-col current-proj">
+                  <div class="peer-col-header">THIS PROJECT</div>
+                  <div class="peer-stat">
+                    <span class="peer-label">Actual Cost:</span>
+                    <strong class="text-red-600 text-lg">₹48.45 L</strong>
+                  </div>
+                  <div class="peer-stat">
+                    <span class="peer-label">Physical Progress:</span>
+                    <strong class="text-orange-600 text-lg">30%</strong>
+                  </div>
+                  <div class="peer-stat">
+                    <span class="peer-label">Duration Elapsed:</span>
+                    <strong class="text-slate-700 text-lg">17 Months</strong>
+                  </div>
+                </div>
+
+                <div class="peer-vs">VS</div>
+
+                <div class="peer-col cohort-proj">
+                  <div class="peer-col-header">SIMILAR PROJECTS (COHORT)</div>
+                  <div class="peer-stat">
+                    <span class="peer-label">Typical Cost Range:</span>
+                    <strong class="text-emerald-700 text-lg">₹19.00L – ₹23.50L</strong>
+                  </div>
+                  <div class="peer-stat">
+                    <span class="peer-label">Typical Progress Range:</span>
+                    <strong class="text-emerald-700 text-lg">75% – 85%</strong>
+                  </div>
+                  <div class="peer-stat">
+                    <span class="peer-label">Typical Duration:</span>
+                    <strong class="text-emerald-700 text-lg">9 – 11 Months</strong>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="peer-callout mt-4">
+                <i class="fa-solid fa-triangle-exclamation text-red-500 text-lg"></i>
+                <span class="text-sm text-red-800">
+                  <strong>Variance Notice:</strong> Cost and progress are significantly outside the typical peer cohort range (+120% cost deviation, -55% progress lag).
+                </span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Interactive AI Recommended Verification Checklist -->
+      <div class="panel-card mb-6">
+        <div class="panel-header bg-slate-900 text-white">
+          <div class="panel-title text-white">
+            <i class="fa-solid fa-list-check text-indigo-400"></i> AI RECOMMENDED VERIFICATION CHECKLIST
+          </div>
+          <span class="text-xs text-slate-300">Human-in-the-Loop Protocol: Officers must physically verify each flagged checkpoint</span>
+        </div>
+        <div class="panel-body">
+          <div class="checklist-container" id="checklistContainer">
+            <!-- Dynamically populated checklist items -->
+          </div>
+
+          <!-- Human Verification Action Console -->
+          <div class="officer-action-box mt-6">
+            <div class="action-box-title">
+              <i class="fa-solid fa-signature text-indigo-600"></i> Authorized Administrative Officer Action Console
+            </div>
+            
+            <div class="grid-2col gap-4 mt-3">
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Select Administrative Action:</label>
+                <select id="officerActionSelect" class="gov-select w-full">
+                  <option value="SCHEDULE_INSPECTION">1. Schedule On-Site Physical Inspection Squad</option>
+                  <option value="CLARIFICATION_NOTICE">2. Issue Clarification / Show-Cause Notice to Agency</option>
+                  <option value="ESCALATE_STATE">3. Escalate to State Nodal Authority for Special Audit</option>
+                  <option value="RESOLVE_JUSTIFIED">4. Mark Verified & File Approved Variance Justification</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Official Remarks / Justification Note:</label>
+                <input type="text" id="officerRemarksInput" class="gov-input w-full" placeholder="Enter findings, memo numbers, or inspection notes...">
+              </div>
+            </div>
+
+            <div class="action-buttons-row mt-4">
+              <button class="btn btn-primary" onclick="submitOfficerAction()">
+                <i class="fa-solid fa-check-double"></i> EXECUTE ADMINISTRATIVE ACTION & LOG AUDIT TRAIL
+              </button>
+              <button class="btn btn-secondary" onclick="printOfficialDossier()">
+                <i class="fa-solid fa-print"></i> EXPORT OFFICIAL VERIFICATION DOSSIER
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- TAB 3: MULTILINGUAL DUPLICATE MATRIX                           -->
+    <!-- ============================================================== -->
+    <section id="tab-duplicates" class="tab-content">
+      <div class="panel-card mb-6">
+        <div class="panel-header">
+          <div class="panel-title">
+            <i class="fa-solid fa-language text-indigo-500"></i> Multilingual NLP Duplicate Work Detection Engine
+          </div>
+          <span class="badge-pill bg-purple-100 text-purple-800 text-xs font-semibold">Cross-Lingual Semantic Matching</span>
+        </div>
+        <div class="panel-body">
+          <p class="text-sm text-slate-600 mb-4">
+            Government infrastructure records frequently contain titles in English, Hindi (Devanagari script), Romanized Hinglish transliterations, abbreviations, and localized spelling variations. The VIKAS-DRISHTI NLP engine performs text normalization, phonetic and lemma mapping, and combines <strong>Semantic Similarity + Geospatial Proximity + Cost Scale</strong> to flag potential duplicate assets across schemes.
+          </p>
+
+          <div class="duplicate-pairs-container" id="duplicatePairsContainer">
+            <!-- Dynamically populated duplicate match cards -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- TAB 4: COST & PAYMENT INTELLIGENCE                             -->
+    <!-- ============================================================== -->
+    <section id="tab-cost-payment" class="tab-content">
+      <div class="grid-2col mb-6">
+        <!-- Cost Anomaly & Isolation Forest Visualization -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <div class="panel-title">
+              <i class="fa-solid fa-brain text-purple-500"></i> Isolation Forest Anomaly Detection
+            </div>
+            <span class="text-xs text-slate-400 font-mono">Unsupervised Multi-Dimensional Partitioning</span>
+          </div>
+          <div class="panel-body">
+            <p class="text-xs text-slate-600 mb-3">
+              Isolation Forest isolates unusual observations using random recursive partitioning. Outliers require fewer splits to be isolated. The engine converts anomaly depths into an anomaly score calibrated with peer cost deviations.
+            </p>
+            <div class="chart-container" style="height: 250px;">
+              <canvas id="costScatterChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Spending vs Physical Progress Curve -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <div class="panel-title">
+              <i class="fa-solid fa-chart-area text-blue-500"></i> Spending vs Physical Progress Divergence
+            </div>
+            <span class="badge-pill bg-amber-100 text-amber-800 text-xs">Mismatch Analysis</span>
+          </div>
+          <div class="panel-body">
+            <p class="text-xs text-slate-600 mb-3">
+              Compares cumulative fund disbursements against reported physical site completion milestones. Points high above the parity line reflect front-loaded expenditure ahead of physical delivery.
+            </p>
+            <div class="chart-container" style="height: 250px;">
+              <canvas id="spendProgressChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment Tranche Timeline & Front-Loading -->
+      <div class="panel-card">
+        <div class="panel-header">
+          <div class="panel-title">
+            <i class="fa-solid fa-receipt text-emerald-500"></i> Flagship Project Payment Tranche Breakdown & Velocity
+          </div>
+          <span class="text-xs text-slate-400">Project: MP/SEH/CH/2024/10234</span>
+        </div>
+        <div class="panel-body">
+          <div class="table-responsive">
+            <table class="gov-table">
+              <thead>
+                <tr>
+                  <th>Tranche #</th>
+                  <th>Disbursement Date</th>
+                  <th>Amount Released</th>
+                  <th>Sanctioned Stage / Milestone</th>
+                  <th>Status</th>
+                  <th>AI Pattern Assessment</th>
+                </tr>
+              </thead>
+              <tbody id="paymentTranchesBody">
+                <!-- Populated via app.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- TAB 5: COMPLIANCE & EARLY WARNING                              -->
+    <!-- ============================================================== -->
+    <section id="tab-compliance" class="tab-content">
+      <div class="panel-card mb-6">
+        <div class="panel-header">
+          <div class="panel-title">
+            <i class="fa-solid fa-shield-halved text-indigo-500"></i> Compliance & Early Warning Center
+          </div>
+          <span class="badge-pill bg-blue-100 text-blue-800 text-xs">eSAKSHI Synchronization Status</span>
+        </div>
+        <div class="panel-body">
+          <div class="grid-2col gap-6">
+            
+            <!-- Compliance Checklist -->
+            <div>
+              <h3 class="text-sm font-bold text-slate-900 mb-3 uppercase tracking-wider">Mandatory Compliance Checkpoints</h3>
+              <div class="compliance-list" id="complianceChecklist">
+                <div class="compliance-item">
+                  <div class="compliance-icon text-emerald-500"><i class="fa-solid fa-circle-check"></i></div>
+                  <div class="compliance-info">
+                    <div class="compliance-title">Sanction / Approval Document</div>
+                    <div class="compliance-meta">Administrative sanction memo available in digital repository</div>
+                  </div>
+                  <span class="badge-pill bg-emerald-100 text-emerald-800 text-xs font-bold">✓ AVAILABLE</span>
+                </div>
+                <div class="compliance-item">
+                  <div class="compliance-icon text-emerald-500"><i class="fa-solid fa-circle-check"></i></div>
+                  <div class="compliance-info">
+                    <div class="compliance-title">PFMS Payment Records</div>
+                    <div class="compliance-meta">All digital tranche transactions mapped with bank acknowledgment</div>
+                  </div>
+                  <span class="badge-pill bg-emerald-100 text-emerald-800 text-xs font-bold">✓ AVAILABLE</span>
+                </div>
+                <div class="compliance-item">
+                  <div class="compliance-icon text-emerald-500"><i class="fa-solid fa-circle-check"></i></div>
+                  <div class="compliance-info">
+                    <div class="compliance-title">eSAKSHI Progress Update</div>
+                    <div class="compliance-meta">Monthly progress report updated within permitted cycle</div>
+                  </div>
+                  <span class="badge-pill bg-emerald-100 text-emerald-800 text-xs font-bold">✓ UPDATED</span>
+                </div>
+                <div class="compliance-item">
+                  <div class="compliance-icon text-amber-500"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                  <div class="compliance-info">
+                    <div class="compliance-title">Geo-Tagged Completion Evidence</div>
+                    <div class="compliance-meta">Ground photographs and physical asset verification pending</div>
+                  </div>
+                  <span class="badge-pill bg-amber-100 text-amber-800 text-xs font-bold">⚠ PENDING VERIFICATION</span>
+                </div>
+                <div class="compliance-item">
+                  <div class="compliance-icon text-amber-500"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                  <div class="compliance-info">
+                    <div class="compliance-title">Nearby Project De-Duplication Comparison</div>
+                    <div class="compliance-meta">Overlapping asset detected within 1.5 km buffer radius</div>
+                  </div>
+                  <span class="badge-pill bg-amber-100 text-amber-800 text-xs font-bold">⚠ REVIEW REQUIRED</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Portfolio Early Warning Radar -->
+            <div>
+              <h3 class="text-sm font-bold text-slate-900 mb-3 uppercase tracking-wider">Sectoral Risk Heatmap & Emerging Warnings</h3>
+              <div class="early-warning-card mb-4 border-l-red">
+                <div class="ew-title text-red-700 font-bold"><i class="fa-solid fa-triangle-exclamation"></i> Alert: Rural Community Infrastructure Cost Escalation</div>
+                <div class="ew-desc text-xs text-slate-700 mt-1">
+                  Average cost deviation across Central India community halls expanded by <strong>+34%</strong> between June and September 2026. Automated risk weight calibration applied.
+                </div>
+              </div>
+              <div class="early-warning-card mb-4 border-l-amber">
+                <div class="ew-title text-amber-700 font-bold"><i class="fa-solid fa-bell"></i> Warning: Financial Year-End Tranche Rush Patterns</div>
+                <div class="ew-desc text-xs text-slate-700 mt-1">
+                  14 projects in Eastern Zone experienced >40% fund disbursements within final 10 days of Q4 without corresponding MB progress uploads.
+                </div>
+              </div>
+              <div class="early-warning-card border-l-blue">
+                <div class="ew-title text-blue-700 font-bold"><i class="fa-solid fa-circle-info"></i> Notice: Monsoon Physical Delay Seasonality</div>
+                <div class="ew-desc text-xs text-slate-700 mt-1">
+                  Seasonal progress dampening factor auto-adjusted in Delay Engine for coastal and riverine blocks.
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- TAB 6: AI INGESTION SIMULATOR SANDBOX                          -->
+    <!-- ============================================================== -->
+    <section id="tab-simulator" class="tab-content">
+      <div class="panel-card mb-6">
+        <div class="panel-header">
+          <div class="panel-title">
+            <i class="fa-solid fa-flask-vial text-purple-500"></i> Interactive AI Risk Pipeline Ingestion Simulator
+          </div>
+          <span class="badge-pill bg-indigo-100 text-indigo-800 text-xs">Live Algorithm Execution</span>
+        </div>
+        <div class="panel-body">
+          <p class="text-sm text-slate-600 mb-4">
+            Test the live AI pipeline with custom project data or load realistic test presets. The system executes:
+            <code>DATA → CLEAN → AI → RISK → EXPLAIN → RECOMMEND</code> in real time.
+          </p>
+
+          <!-- Presets -->
+          <div class="presets-row mb-4">
+            <span class="text-xs font-bold text-slate-700 mr-2">Load Test Preset:</span>
+            <button class="btn-xs btn-outline" onclick="loadSimulatorPreset('flagship')">Flagship Community Hall (Critical)</button>
+            <button class="btn-xs btn-outline" onclick="loadSimulatorPreset('water_ro')">Solar RO Water Unit (High Risk)</button>
+            <button class="btn-xs btn-outline" onclick="loadSimulatorPreset('hindi_dup')">Hindi Duplicate "सामुदायिक भवन" (High Duplicate)</button>
+            <button class="btn-xs btn-outline" onclick="loadSimulatorPreset('normal_road')">Normal Road Work (Low Risk)</button>
+          </div>
+
+          <!-- Simulator Form -->
+          <form id="simulatorForm" onsubmit="runSimulator(event)">
+            <div class="grid-3col gap-4 mb-4">
+              <div>
+                <label class="sim-label">Project Title (English / Hindi):</label>
+                <input type="text" id="simTitle" class="gov-input w-full" value="Construction of Community Hall" required>
+              </div>
+              <div>
+                <label class="sim-label">Sector / Category:</label>
+                <select id="simSector" class="gov-select w-full">
+                  <option value="Community Infrastructure">Community Infrastructure</option>
+                  <option value="Drinking Water & Sanitation">Drinking Water & Sanitation</option>
+                  <option value="Rural Roads & Drainage">Rural Roads & Drainage</option>
+                  <option value="Education & Youth">Education & Youth</option>
+                  <option value="Public Health">Public Health</option>
+                </select>
+              </div>
+              <div>
+                <label class="sim-label">District & State:</label>
+                <input type="text" id="simLocation" class="gov-input w-full" value="Sehore, Madhya Pradesh">
+              </div>
+            </div>
+
+            <div class="grid-4col gap-4 mb-4">
+              <div>
+                <label class="sim-label">Estimated / Sanctioned Cost (₹ Lakhs):</label>
+                <input type="number" id="simEstCost" class="gov-input w-full" value="22.00" step="0.1" required>
+              </div>
+              <div>
+                <label class="sim-label">Actual Expenditure (₹ Lakhs):</label>
+                <input type="number" id="simActCost" class="gov-input w-full" value="48.45" step="0.1" required>
+              </div>
+              <div>
+                <label class="sim-label">Funds Utilized (%):</label>
+                <input type="number" id="simFundsUtil" class="gov-input w-full" value="75" min="0" max="100" required>
+              </div>
+              <div>
+                <label class="sim-label">Physical Progress (%):</label>
+                <input type="number" id="simPhysProg" class="gov-input w-full" value="30" min="0" max="100" required>
+              </div>
+            </div>
+
+            <div class="grid-4col gap-4 mb-4">
+              <div>
+                <label class="sim-label">Duration Elapsed (Months):</label>
+                <input type="number" id="simActDur" class="gov-input w-full" value="17" min="1" required>
+              </div>
+              <div>
+                <label class="sim-label">Expected Duration (Months):</label>
+                <input type="number" id="simExpDur" class="gov-input w-full" value="9" min="1" required>
+              </div>
+              <div>
+                <label class="sim-label">Expected Progress (%):</label>
+                <input type="number" id="simExpProg" class="gov-input w-full" value="85" min="0" max="100" required>
+              </div>
+              <div>
+                <label class="sim-label">First Tranche Advance (%):</label>
+                <input type="number" id="simAdvancePct" class="gov-input w-full" value="68" min="0" max="100" required>
+              </div>
+            </div>
+
+            <div class="grid-2col gap-4 mb-4">
+              <div>
+                <label class="sim-label">Nearby Candidate Work Title (for Duplicate Check):</label>
+                <input type="text" id="simDupTitle" class="gov-input w-full" value="सामुदायिक भवन निर्माण - पिपलिया">
+              </div>
+              <div>
+                <label class="sim-label">Candidate Distance (km):</label>
+                <input type="number" id="simDupDist" class="gov-input w-full" value="1.4" step="0.1">
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-full py-3 text-base">
+              <i class="fa-solid fa-microchip"></i> EXECUTE AI PIPELINE & CALCULATE RISK SCORE
+            </button>
+          </form>
+
+          <!-- Simulator Results Output Container -->
+          <div id="simResultContainer" class="mt-6 hidden">
+            <!-- Populated via app.js -->
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- TAB 7: IMMUTABLE AUDIT TRAIL                                   -->
+    <!-- ============================================================== -->
+    <section id="tab-audit" class="tab-content">
+      <div class="panel-card mb-6">
+        <div class="panel-header">
+          <div class="panel-title">
+            <i class="fa-solid fa-fingerprint text-slate-400"></i> Tamper-Evident Administrative Audit Trail
+          </div>
+          <span class="badge-pill bg-slate-800 text-white font-mono text-xs">SHA-256 Cryptographic Chain</span>
+        </div>
+        <div class="panel-body p-0">
+          <div class="table-responsive">
+            <table class="gov-table">
+              <thead>
+                <tr>
+                  <th>Audit ID & Timestamp</th>
+                  <th>Authorized Officer</th>
+                  <th>Designation / Role</th>
+                  <th>Project ID</th>
+                  <th>Action Category</th>
+                  <th>Administrative Details</th>
+                  <th>Cryptographic SHA-256 Hash</th>
+                </tr>
+              </thead>
+              <tbody id="auditTableBody">
+                <!-- Dynamically populated via app.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Printable Official Verification Dossier Modal (Print View) -->
+  <div id="dossierPrintModal" class="dossier-modal hidden">
+    <div class="dossier-modal-content">
+      <div class="dossier-modal-header no-print">
+        <h2 class="text-lg font-bold"><i class="fa-solid fa-file-contract"></i> Official MoSPI Verification Dossier</h2>
+        <div class="space-x-2">
+          <button class="btn btn-primary btn-sm" onclick="window.print()"><i class="fa-solid fa-print"></i> Print / Save PDF</button>
+          <button class="btn btn-secondary btn-sm" onclick="closeDossierModal()">Close</button>
+        </div>
+      </div>
+      <div id="printableDossierBody" class="printable-doc">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="gov-footer">
+    <div class="footer-inner">
+      <div class="footer-left">
+        <strong>VIKAS-DRISHTI</strong> — AI-Powered MPLADS Risk Intelligence & Monitoring System
+        <div class="text-xs text-slate-400 mt-1">Developed for Smart India Hackathon 2026 | MoSPI Problem Statement SIH26102</div>
+      </div>
+      <div class="footer-right text-xs text-slate-400 text-right">
+        <div>Analytical Layer for eSAKSHI Ecosystem</div>
+        <div>Detect → Explain → Recommend → Verify → Track</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Application Client Script -->
+  <script src="app.js"></script>
+</body>
+</html>
