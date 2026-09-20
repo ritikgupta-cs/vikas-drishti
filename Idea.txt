@@ -1,0 +1,779 @@
+You are a senior full-stack engineer, UI/UX designer, AI/ML architect, and government-tech product designer.
+
+Build a complete, polished, responsive web application prototype called:
+
+VIKAS-DRISHTI
+AI-Powered MPLADS Risk Intelligence & Monitoring System
+
+The application is being developed as a Smart India Hackathon 2026 prototype for the Ministry of Statistics & Programme Implementation (MoSPI) problem statement SIH26102.
+
+==================================================
+1. PROJECT PURPOSE
+==================================================
+
+VIKAS-DRISHTI is an AI-powered risk-intelligence and monitoring layer for the MPLADS ecosystem.
+
+MPLADS = Members of Parliament Local Area Development Scheme.
+
+The system should NOT replace the existing official MPLADS digital ecosystem/eSAKSHI.
+
+Instead:
+
+eSAKSHI = manages and monitors the implementation workflow
+
+VIKAS-DRISHTI = analyzes available project, financial, progress, payment, location and text data to identify unusual patterns and prioritize projects for verification.
+
+The core objective is:
+
+Detect → Explain → Recommend → Verify → Track
+
+The system should help authorized government officers identify projects that may require attention instead of manually checking every project with equal priority.
+
+IMPORTANT:
+The system must never claim that an anomaly is confirmed fraud.
+
+Use terminology such as:
+- Potential anomaly
+- Risk signal
+- Risk alert
+- Duplicate possibility
+- Verification required
+- High-risk project
+- Requires officer review
+
+The AI supports decision-making. The final administrative decision always remains with the authorized human officer.
+
+==================================================
+2. CORE PROBLEM
+==================================================
+
+MPLADS involves a large number of development works and therefore generates large amounts of:
+
+- Project information
+- Sanction/approval information
+- Estimated costs
+- Actual expenditure
+- Payment information
+- Physical progress
+- Expected completion dates
+- Actual completion dates
+- Project descriptions
+- Implementing agency information
+- Location information
+- Asset creation information
+
+Manually monitoring every project continuously is difficult.
+
+The system should identify:
+
+1. Cost anomalies
+2. Cost overruns
+3. Delayed projects
+4. Low physical progress
+5. Spending-progress mismatch
+6. Potential duplicate works
+7. Unusual project patterns
+8. Potential payment/expenditure irregularities
+9. Compliance gaps
+10. Emerging risk trends
+
+The output should be an intelligent risk-prioritization system rather than a simple dashboard.
+
+==================================================
+3. MAIN SYSTEM FLOW
+==================================================
+
+Implement this complete architecture:
+
+MPLADS DATA
+    ↓
+DATA INGESTION
+    ↓
+DATA CLEANING & VALIDATION
+    ↓
+FEATURE ENGINEERING
+    ↓
+AI/ML + RULE ENGINE
+    ↓
+MULTIPLE RISK SIGNALS
+    ↓
+RISK SCORING ENGINE
+    ↓
+EXPLAINABLE AI
+    ↓
+RISK ALERTS
+    ↓
+AI INVESTIGATION COPILOT
+    ↓
+HUMAN VERIFICATION
+    ↓
+ACTION / STATUS UPDATE
+    ↓
+AUDIT TRAIL
+
+Use the conceptual memory:
+
+DATA → CLEAN → AI → RISK → EXPLAIN → HUMAN → AUDIT
+
+==================================================
+4. USER ROLES
+==================================================
+
+Create role-based access control.
+
+Roles:
+
+1. District Officer
+2. State Nodal Authority
+3. Ministry/Admin Officer
+4. MP/Authorized Viewer
+5. System Administrator
+
+Use RBAC.
+
+Example:
+
+District Officer:
+- View district projects
+- View risk alerts
+- Investigate projects
+- Update verification status
+- Generate reports
+
+State Nodal Authority:
+- View multiple districts
+- Compare district-level risk
+- Monitor trends
+- Review escalated alerts
+
+Ministry/Admin:
+- State-level and national-level analytics
+- Portfolio risk overview
+- Trend analysis
+- Reports
+
+MP/Viewer:
+- View recommended/project status information permitted by role
+
+Administrator:
+- Manage users
+- Manage roles
+- Manage system configuration
+- View audit logs
+
+==================================================
+5. DASHBOARD
+==================================================
+
+Create a highly polished government-tech dashboard.
+
+Visual theme:
+
+- Dark navy
+- White
+- Purple/indigo AI elements
+- Red = Critical
+- Orange = High
+- Yellow = Medium
+- Green = Low/Normal
+- Clean cards
+- Rounded corners
+- Professional charts
+- Minimal animations
+- Responsive design
+- Mobile-friendly
+
+Dashboard title:
+
+VIKAS-DRISHTI
+AI-Powered MPLADS Risk Intelligence
+
+Show:
+
+TOTAL PROJECTS
+12,458
+
+CRITICAL RISK
+64
+
+HIGH RISK
+98
+
+MEDIUM RISK
+62
+
+LOW RISK
+24
+
+These are SAMPLE PROTOTYPE DATA only.
+
+Clearly label:
+
+"Prototype Dashboard — Sample Data"
+
+Do not present these as official government statistics.
+
+Dashboard sections:
+
+1. Project Summary
+2. Risk Distribution
+3. Live Risk Signals
+4. High-Risk Projects
+5. Recent Alerts
+6. Risk Trend
+7. District/Location Risk Map
+8. Compliance Status
+9. Quick Investigation Access
+
+==================================================
+6. RISK CATEGORIES
+==================================================
+
+Use:
+
+0–30 = LOW
+31–60 = MEDIUM
+61–80 = HIGH
+81–100 = CRITICAL
+
+Important:
+
+These thresholds are prototype configuration values, NOT official MPLADS rules.
+
+Risk score means:
+
+"Priority for verification"
+
+NOT:
+
+"Probability of fraud"
+
+Show this clarification wherever appropriate.
+
+==================================================
+7. RISK SCORING ENGINE
+==================================================
+
+Create a prototype multi-signal risk scoring model.
+
+Example maximum contributions:
+
+Cost anomaly = 25
+Delay = 20
+Spending vs progress mismatch = 20
+Duplicate possibility = 15
+Other unusual patterns = 20
+
+Total = 100
+
+Example project:
+
+Cost anomaly = 22/25
+Delay = 18/20
+Spending-progress mismatch = 17/20
+Duplicate possibility = 15/15
+Other patterns = 20/20
+
+Final:
+
+92/100
+
+Label:
+
+CRITICAL — VERIFY
+
+IMPORTANT:
+
+These weights are prototype/team-defined values.
+
+They are not official government scoring rules.
+
+The production system should calibrate weights using historical data, expert feedback and validation.
+
+==================================================
+8. COST ANOMALY DETECTION
+==================================================
+
+Implement a cost anomaly detection module.
+
+Input fields:
+
+- Project ID
+- Project type
+- District
+- Location
+- Estimated cost
+- Actual expenditure
+- Sanctioned amount
+- Project date
+- Project duration
+- Implementing agency
+
+Calculate:
+
+Cost Deviation:
+
+Actual Cost - Estimated Cost
+
+Cost Deviation Percentage:
+
+((Actual Cost - Estimated Cost) / Estimated Cost) × 100
+
+Compare projects with similar:
+
+- Project types
+- Geographic areas
+- Time periods
+- Project sizes
+
+Use anomaly detection.
+
+Preferred algorithm:
+
+Isolation Forest
+
+Technical explanation:
+
+Isolation Forest is an unsupervised anomaly detection algorithm that isolates unusual observations using random partitioning.
+
+Important:
+
+Isolation Forest identifies unusual patterns.
+
+It does NOT directly produce the final risk score.
+
+It does NOT prove fraud.
+
+Its output should be transformed/calibrated into an anomaly severity score and then passed to the risk scoring engine.
+
+Example:
+
+Similar projects:
+₹19L–₹23L
+
+Current project:
+₹48.45L
+
+System:
+
+1. Detects unusual cost
+2. Generates cost anomaly signal
+3. Calculates anomaly severity
+4. Converts it into risk contribution
+5. Shows explanation
+
+==================================================
+9. DELAY DETECTION
+==================================================
+
+Compare:
+
+Expected completion date
+vs
+Actual/current completion status
+
+Compare:
+
+Expected physical progress
+vs
+Actual physical progress
+
+Example:
+
+Expected progress = 80%
+Actual progress = 30%
+
+Generate:
+
+DELAY RISK
+
+Also compare project duration with similar projects.
+
+Show:
+
+Expected duration
+Actual duration
+Delay days
+Delay percentage
+
+==================================================
+10. SPENDING VS PHYSICAL PROGRESS
+==================================================
+
+Create a module that compares financial utilization with physical progress.
+
+Example:
+
+Funds utilized = 75%
+
+Physical progress = 30%
+
+This creates a:
+
+SPENDING-PROGRESS MISMATCH
+
+Important:
+
+This is an anomaly/risk signal, not proof of wrongdoing.
+
+The UI should show:
+
+"High expenditure relative to reported physical progress — verification recommended."
+
+==================================================
+11. DUPLICATE PROJECT DETECTION
+==================================================
+
+Create a multilingual NLP-based duplicate detection system.
+
+Government project descriptions may contain:
+
+- English
+- Hindi
+- Regional languages
+- Hinglish
+- Transliteration
+- Spelling variations
+- Abbreviations
+- Different word orders
+
+Use:
+
+- Text normalization
+- Language detection
+- Transliteration where appropriate
+- Spelling normalization
+- Multilingual embeddings
+- Semantic similarity
+- Cosine similarity
+
+Compare project descriptions semantically instead of only exact string matching.
+
+Also combine:
+
+Text similarity
++
+Location similarity
++
+Project type
++
+Project metadata
++
+Date
++
+Cost
+
+Only generate:
+
+"POTENTIAL DUPLICATE"
+
+Never say:
+
+"DUPLICATE CONFIRMED"
+
+Example:
+
+Project A:
+"Construction of community hall"
+
+Project B:
+"Samudayik Bhawan Nirman"
+
+If semantic similarity and location are high, generate a duplicate-risk signal.
+
+==================================================
+12. PAYMENT / EXPENDITURE ANALYSIS
+==================================================
+
+Create a payment analysis module.
+
+Possible fields:
+
+- Payment ID
+- Project ID
+- Payment date
+- Amount
+- Payment stage
+- Implementing agency
+- Beneficiary/vendor information where permitted
+- Total expenditure
+
+Identify unusual patterns such as:
+
+- Unexpected payment concentration
+- Unusual payment timing
+- Spending significantly ahead of progress
+- Repeated unusual payment patterns
+
+Again:
+
+Flag for verification.
+
+Do not label as confirmed fraud.
+
+==================================================
+13. COMPLIANCE MONITORING
+==================================================
+
+Create a dedicated:
+
+COMPLIANCE & EARLY WARNING CENTER
+
+Checklist:
+
+Sanction / Approval
+✓ Available
+
+Payment Record
+✓ Available
+
+Progress Update
+✓ Updated
+
+Completion Evidence
+⚠ Pending Verification
+
+Nearby Project Comparison
+⚠ Review Required
+
+Also support:
+
+- Compliance alerts
+- Missing records
+- Pending verification
+- Overdue updates
+- Completion evidence status
+
+==================================================
+14. TREND ANALYSIS
+==================================================
+
+Create trend analytics for:
+
+- Cost anomalies
+- Project delays
+- Spending-progress mismatches
+- Duplicate possibilities
+- District-level risk
+- Agency-level patterns
+- Risk score trends
+
+Show:
+
+Last 6 months
+
+Use charts.
+
+Also create:
+
+EARLY WARNING
+
+Example:
+
+"Cost anomaly signals increased over the last 3 months."
+
+The system should help identify emerging patterns before they become larger monitoring problems.
+
+==================================================
+15. RISK MAP
+==================================================
+
+Create an interactive map.
+
+Use:
+
+Leaflet or Mapbox.
+
+Show project markers.
+
+Marker colors:
+
+Red = Critical
+Orange = High
+Yellow = Medium
+Green = Low
+
+Clicking a marker should open:
+
+Project Name
+Project ID
+Risk Score
+Risk Category
+Main Risk Signal
+Location
+Quick Investigate button
+
+Use sample coordinates.
+
+Clearly label:
+
+"Prototype Map — Sample Data"
+
+==================================================
+16. AI INVESTIGATION COPILOT
+==================================================
+
+This is the key unique feature.
+
+When an officer opens a high-risk project, show:
+
+AI INVESTIGATION COPILOT
+
+Project:
+Construction of Community Hall
+
+Project ID:
+MP/SEH/CH/2024/10234
+
+Location:
+Village Pipaliya, Sehore, Madhya Pradesh
+
+Risk Score:
+92/100
+
+CRITICAL
+
+Then show:
+
+WHY IS THIS PROJECT HIGH RISK?
+
+Cost Anomaly
+22/25
+
+Delay
+18/20
+
+Spending vs Progress
+17/20
+
+Duplicate Possibility
+15/15
+
+Other Patterns
+20/20
+
+AI EXPLANATION:
+
+"Actual expenditure is significantly higher than similar projects. Physical progress is below expectation, while a large portion of funds has already been utilized. A similar nearby work was also detected."
+
+Then generate:
+
+AI RECOMMENDED VERIFICATION CHECKLIST
+
+1. Verify expenditure documents
+   Check bills, vouchers and supporting documents.
+
+2. Verify physical work progress
+   Confirm actual site status.
+
+3. Compare sanctioned vs actual cost
+   Review sanctioned estimate and actual expenditure.
+
+4. Check nearby/similar projects
+   Review potential duplicate or overlapping works.
+
+5. Verify payment records
+   Check payment details and supporting evidence.
+
+Each item should have:
+
+[VERIFY]
+
+After clicking:
+
+[✓ COMPLETED]
+
+At the bottom:
+
+START VERIFICATION PROCESS →
+
+This demonstrates:
+
+DETECT
+↓
+EXPLAIN
+↓
+RECOMMEND
+↓
+VERIFY
+↓
+TRACK
+
+==================================================
+17. PROJECT TWIN / PEER COMPARISON
+==================================================
+
+Create a "Project Twin" or "Compare with Similar Projects" section.
+
+Show:
+
+THIS PROJECT
+
+₹48.45L
+30% progress
+17 months
+
+SIMILAR PROJECTS
+
+₹19–23L
+75–85% progress
+9–11 months
+
+Show a warning:
+
+"Cost and progress are outside the typical peer range."
+
+This feature helps officers understand WHY a project looks unusual.
+
+==================================================
+18. EXPLAINABLE AI
+==================================================
+
+Every risk alert should be explainable.
+
+Do NOT simply display:
+
+"Risk = 92"
+
+Instead show:
+
+Risk = 92/100
+
+Because:
+
+Cost anomaly → 22
+Delay → 18
+Spending-progress mismatch → 17
+Duplicate possibility → 15
+Other patterns → 20
+
+The UI should make the model understandable to a non-technical government officer.
+
+==================================================
+19. HUMAN-IN-THE-LOOP
+==================================================
+
+This is mandatory.
+
+The AI:
+
+- Detects
+- Scores
+- Explains
+- Recommends
+
+The officer:
+
+- Verifies
+- Investigates
+- Decides
+- Takes administrative action
+
+Never allow the AI to:
+
+- Automatically accuse
+- Automatically reject
+- Automatically penalize
+- Automatically declare fraud
+
+Show this concept

@@ -7,6 +7,9 @@ SIH 2026 - MoSPI Problem Statement SIH26102
 import datetime
 import hashlib
 import json
+import os
+
+DB_FILE = os.path.join(os.path.dirname(__file__), 'db.json')
 
 # Top-level portfolio metrics (clearly labeled as Prototype Sample Data)
 PORTFOLIO_SUMMARY = {
@@ -554,4 +557,46 @@ def add_audit_event(officer_name, officer_role, district, project_id, action, de
         "sha256_hash": event_hash
     }
     AUDIT_TRAIL.insert(0, new_entry)
+    save_data()
     return new_entry
+
+def recalculate_summary():
+    global PORTFOLIO_SUMMARY
+    pending_checks = sum(1 for p in PROJECTS for chk in p.get("verification_checklist", []) if not chk.get("completed"))
+    
+    # We maintain the large prototype base numbers but adjust them dynamically
+    # based on the small set of tracked prototype projects.
+    PORTFOLIO_SUMMARY["pending_officer_verifications"] = 150 + pending_checks
+    PORTFOLIO_SUMMARY["last_model_sync"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S UTC")
+
+def save_data():
+    recalculate_summary()
+    data = {
+        "PROJECTS": PROJECTS,
+        "AUDIT_TRAIL": AUDIT_TRAIL,
+        "PORTFOLIO_SUMMARY": PORTFOLIO_SUMMARY,
+        "TREND_DATA": TREND_DATA
+    }
+    try:
+        with open(DB_FILE, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=4, ensure_ascii=False)
+    except Exception as e:
+        print(f"Failed to save data: {e}")
+
+def load_data():
+    global PROJECTS, AUDIT_TRAIL, PORTFOLIO_SUMMARY, TREND_DATA
+    if os.path.exists(DB_FILE):
+        try:
+            with open(DB_FILE, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                PROJECTS = data.get("PROJECTS", PROJECTS)
+                AUDIT_TRAIL = data.get("AUDIT_TRAIL", AUDIT_TRAIL)
+                PORTFOLIO_SUMMARY = data.get("PORTFOLIO_SUMMARY", PORTFOLIO_SUMMARY)
+                TREND_DATA = data.get("TREND_DATA", TREND_DATA)
+        except Exception as e:
+            print(f"Error loading {DB_FILE}: {e}")
+    else:
+        save_data()
+
+# Load data on module initialization
+load_data()
