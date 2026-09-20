@@ -16,6 +16,50 @@ const state = {
 };
 
 // ==============================================================
+// 0. DRY API CLIENT & NFR (TOASTS, LOADING)
+// ==============================================================
+
+function setGlobalLoading(isLoading) {
+  const overlay = document.getElementById('loading-overlay');
+  if (overlay) {
+    if (isLoading) overlay.classList.remove('hidden');
+    else overlay.classList.add('hidden');
+  }
+}
+
+function showToast(message, type = 'success') {
+  const container = document.getElementById('toast-container');
+  if (!container) return;
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check text-emerald-500' : 'fa-circle-exclamation text-red-500'}"></i> <span>${message}</span>`;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.classList.add('fade-out');
+    toast.addEventListener('animationend', () => toast.remove());
+  }, 4000);
+}
+
+async function apiClient(endpoint, options = {}) {
+  setGlobalLoading(true);
+  try {
+    const res = await fetch(endpoint, options);
+    const data = await res.json();
+    if (data.error) {
+      showToast(data.error, 'error');
+      throw new Error(data.error);
+    }
+    return data;
+  } catch (err) {
+    console.error(`API Error on ${endpoint}:`, err);
+    // Don't show toast for known expected silent errors if any, but default to show
+    throw err;
+  } finally {
+    setGlobalLoading(false);
+  }
+}
+
+// ==============================================================
 // 1. INITIALIZATION & LIFECYCLE
 // ==============================================================
 
@@ -161,8 +205,7 @@ function updateRoleUI() {
 
 async function loadSummary() {
   try {
-    const res = await fetch('/api/summary');
-    const data = await res.json();
+    const data = await apiClient('/api/summary');
     state.summaryData = data;
 
     // Update KPIs
@@ -179,19 +222,18 @@ async function loadSummary() {
       initTrendChart(data.trend_data);
     }
   } catch (err) {
-    console.error("Failed to load summary data:", err);
+    // Error handled by apiClient
   }
 }
 
 async function loadProjects() {
   try {
-    const res = await fetch('/api/projects');
-    const data = await res.json();
+    const data = await apiClient('/api/projects');
     state.allProjects = data.projects || [];
     renderProjectsTable(state.allProjects);
     renderMapMarkers(state.allProjects);
   } catch (err) {
-    console.error("Failed to load projects:", err);
+    // Error handled by apiClient
   }
 }
 
@@ -361,13 +403,8 @@ async function openProjectCopilot(projectId, autoSwitch = true) {
   state.activeProjectId = projectId;
 
   try {
-    const res = await fetch(`/api/projects/${projectId}`);
-    const project = await res.json();
-    if (project.error) {
-      alert(project.error);
-      return;
-    }
-
+    const project = await apiClient(`/api/projects/${projectId}`);
+    
     state.activeProjectData = project;
     renderCopilotDossier(project);
 
@@ -376,7 +413,7 @@ async function openProjectCopilot(projectId, autoSwitch = true) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   } catch (err) {
-    console.error("Failed to load project details:", err);
+    // Error handled by apiClient
   }
 }
 
@@ -467,7 +504,7 @@ async function toggleChecklistStep(chkId) {
   const officerRole = ROLE_DEFINITIONS[state.currentRole]?.badge || 'District Officer';
 
   try {
-    const res = await fetch('/api/verify-step', {
+    const data = await apiClient('/api/verify-step', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -478,15 +515,17 @@ async function toggleChecklistStep(chkId) {
       })
     });
 
-    const data = await res.json();
     if (data.success) {
+      showToast('Checklist verification updated successfully', 'success');
       // Reload project in copilot
       await openProjectCopilot(state.activeProjectData.id, false);
       // Reload audit log
       loadAuditTrail();
+      // Reload summary to reflect updated KPIs/Metrics dynamically
+      loadSummary();
     }
   } catch (err) {
-    console.error("Failed to toggle checklist step:", err);
+    // Error handled by apiClient
   }
 }
 
@@ -499,7 +538,7 @@ async function submitOfficerAction() {
   const officerRole = ROLE_DEFINITIONS[state.currentRole]?.badge || 'District Officer';
 
   try {
-    const res = await fetch('/api/action', {
+    const data = await apiClient('/api/action', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -511,16 +550,17 @@ async function submitOfficerAction() {
       })
     });
 
-    const data = await res.json();
     if (data.success) {
-      alert(`Administrative Action Recorded Successfully!\nProject Status updated to: "${data.project_status}"\nAudit Hash: ${data.audit_entry?.sha256_hash.substring(0, 16)}...`);
+      showToast(`Action Recorded. Project Status: ${data.project_status}`, 'success');
       document.getElementById('officerRemarksInput').value = '';
       await openProjectCopilot(state.activeProjectData.id, false);
       await loadProjects();
       await loadAuditTrail();
+      // Reload summary to reflect updated KPIs/Metrics dynamically
+      loadSummary();
     }
   } catch (err) {
-    console.error("Failed to execute officer action:", err);
+    // Error handled by apiClient
   }
 }
 
@@ -549,11 +589,10 @@ function renderPaymentTranches(payments) {
 
 async function loadDuplicates() {
   try {
-    const res = await fetch('/api/duplicates');
-    const data = await res.json();
+    const data = await apiClient('/api/duplicates');
     renderDuplicatePairs(data.pairs || []);
   } catch (err) {
-    console.error("Failed to load duplicates:", err);
+    // Error handled by apiClient
   }
 }
 
@@ -874,18 +913,18 @@ async function runSimulator(e) {
   };
 
   try {
-    const res = await fetch('/api/analyze', {
+    const data = await apiClient('/api/analyze', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
 
-    const data = await res.json();
     if (data.success && data.evaluation) {
+      showToast('AI Simulation Completed', 'success');
       renderSimulatorResult(data.evaluation);
     }
   } catch (err) {
-    console.error("Simulator execution failed:", err);
+    // Error handled by apiClient
   }
 }
 
@@ -955,11 +994,10 @@ function renderSimulatorResult(ev) {
 
 async function loadAuditTrail() {
   try {
-    const res = await fetch('/api/audit');
-    const data = await res.json();
+    const data = await apiClient('/api/audit');
     renderAuditTable(data.audit_records || []);
   } catch (err) {
-    console.error("Failed to load audit trail:", err);
+    // Error handled by apiClient
   }
 }
 
