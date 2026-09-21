@@ -14,7 +14,7 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 import data_store
 from ai_engine import ai_engine
 
-PORT = 8080
+PORT = int(os.environ.get('PORT', 8080))
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class VikasDrishtiHandler(BaseHTTPRequestHandler):
