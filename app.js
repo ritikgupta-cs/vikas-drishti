@@ -82,7 +82,9 @@ function initClock() {
     const now = new Date();
     const clockEl = document.getElementById('liveTime');
     if (clockEl) {
-      clockEl.textContent = now.toISOString().replace('T', ' ').substring(0, 19) + ' UTC';
+      const istOffset = 5.5 * 60 * 60 * 1000;
+      const istTime = new Date(now.getTime() + istOffset);
+      clockEl.textContent = istTime.toISOString().replace('T', ' ').substring(0, 19) + ' IST';
     }
   }
   updateTime();
