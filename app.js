@@ -63,6 +63,59 @@ async function apiClient(endpoint, options = {}) {
 // 1. INITIALIZATION & LIFECYCLE
 // ==============================================================
 
+window.isAdminMode = false;
+
+window.checkAdminPassword = function() {
+  const pwd = document.getElementById('adminPassword').value;
+  if (pwd === 'SIH26') {
+    window.isAdminMode = true;
+    document.getElementById('adminLoginArea').style.display = 'none';
+    document.getElementById('adminLoggedInArea').style.display = 'inline';
+    document.getElementById('adminLoginBlock').style.background = '#064e3b';
+    
+    // Show Action Console and Simulator Tab
+    const actionBox = document.getElementById('officerActionBox');
+    if (actionBox) actionBox.style.display = 'block';
+    
+    const simTab = document.getElementById('navTabSimulator');
+    if (simTab) simTab.style.display = 'inline-block';
+    
+    // Re-render project details if one is selected
+    if (state.currentProject) {
+      renderProjectDetail(state.currentProject);
+    }
+    showToast('Admin Mode Activated Successfully', 'success');
+  } else {
+    showToast('Incorrect Password', 'error');
+  }
+};
+
+window.logoutAdmin = function() {
+  window.isAdminMode = false;
+  document.getElementById('adminLoginArea').style.display = 'inline';
+  document.getElementById('adminLoggedInArea').style.display = 'none';
+  document.getElementById('adminLoginBlock').style.background = '#0f172a';
+  
+  // Hide Action Console and Simulator Tab
+  const actionBox = document.getElementById('officerActionBox');
+  if (actionBox) actionBox.style.display = 'none';
+  
+  const simTab = document.getElementById('navTabSimulator');
+  if (simTab) simTab.style.display = 'none';
+  
+  // Re-render project details if one is selected
+  if (state.currentProject) {
+    renderProjectDetail(state.currentProject);
+  }
+  
+  // If user was on the simulator tab, kick them back to Dashboard
+  if (document.getElementById('tab-simulator') && !document.getElementById('tab-simulator').classList.contains('hidden')) {
+    document.querySelector('.nav-tab[data-tab="dashboard"]').click();
+  }
+  
+  showToast('Logged out from Admin Mode', 'success');
+};
+
 document.addEventListener('DOMContentLoaded', () => {
   initClock();
   initRoleSelector();
@@ -82,7 +135,7 @@ function initClock() {
     const now = new Date();
     const clockEl = document.getElementById('liveTime');
     if (clockEl) {
-      const istOffset = 5.5 * 60 * 60 * 1000;
+      const istOffset = 5.5 * 60 * 60 * 1000; // IST is UTC + 5:30
       const istTime = new Date(now.getTime() + istOffset);
       clockEl.textContent = istTime.toISOString().replace('T', ' ').substring(0, 19) + ' IST';
     }
@@ -490,9 +543,11 @@ function renderChecklist(checklist) {
         ${item.completed ? `<div class="chk-meta"><i class="fa-solid fa-circle-check"></i> Verified by: ${item.verified_by || 'Officer'} on ${item.timestamp || 'Today'}</div>` : ''}
       </div>
       <div>
+        ${window.isAdminMode ? `
         <button class="${item.completed ? 'btn-completed' : 'btn-verify'}" onclick="toggleChecklistStep('${item.id}')">
           ${item.completed ? '<i class="fa-solid fa-check"></i> COMPLETED' : '<i class="fa-solid fa-clipboard-check"></i> VERIFY'}
         </button>
+        ` : ''}
       </div>
     `;
     container.appendChild(div);
